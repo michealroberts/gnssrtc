@@ -7,6 +7,7 @@
 
 from datetime import datetime
 from typing import Literal, Optional, TypedDict
+from re import MULTILINE, compile
 
 # **************************************************************************************
 
@@ -58,5 +59,11 @@ class GPCGGNMEASentence(TypedDict):
     # The checksum of the message (starts with "*"):
     checksum: str
 
+
+# **************************************************************************************
+
+GPCGG_NMEA_MESSAGE_REGEX = compile(
+    r"^\$([A-Z]{5}),([^*]+)\*([0-9A-Fa-f]{2})$", MULTILINE
+)
 
 # **************************************************************************************
