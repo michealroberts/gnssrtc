@@ -1,4 +1,4 @@
-name: astral-uv-python-package-template/publish
+name: gnssrtc/publish
 
 on:
   release:

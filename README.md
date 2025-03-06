@@ -1,2 +1,3 @@
-# astral-uv-python-package-template
-A hypermodern python package starter template with astral uv ruff and mypy
+# GNSS Real Time Clock
+
+Modern, type-safe, zero-dependency python library for controlling GNSS RTC for the Raspberry Pi
