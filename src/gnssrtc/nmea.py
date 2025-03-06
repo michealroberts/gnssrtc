@@ -67,3 +67,20 @@ GPCGG_NMEA_MESSAGE_REGEX = compile(
 )
 
 # **************************************************************************************
+
+
+def parse_gpcgg_nmea_coordinate(
+    value: str, direction: Literal["N", "S", "E", "W"]
+) -> float:
+    degrees = int(float(value) // 100)
+    minutes = float(value) - (degrees * 100)
+
+    ddegrees = degrees + (minutes / 60.0)
+
+    if direction in ("S", "W"):
+        ddegrees = -ddegrees
+
+    return ddegrees
+
+
+# **************************************************************************************
