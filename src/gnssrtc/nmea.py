@@ -133,38 +133,38 @@ def parse_gpcgg_nmea_sentence(value: str) -> GPCGGNMEASentence:
 
     latitude_value = match.group(3)
 
-    # Extract the latitude direction (should be "N" or "S").
+    # Extract the latitude direction (should be "N" or "S"):
     latitude_direction: Literal["N", "S"] = cast(Literal["N", "S"], match.group(4))
 
-    # Convert the latitude value to decimal degrees.
+    # Convert the latitude value to decimal degrees:
     latitude = parse_gpcgg_nmea_coordinate(latitude_value, latitude_direction)
 
-    # Extract the longitude value.
+    # Extract the longitude value:
     longitude_value = match.group(5)
 
-    # Extract the longitude direction (should be "E" or "W").
+    # Extract the longitude direction (should be "E" or "W"):
     longitude_direction: Literal["E", "W"] = cast(Literal["E", "W"], match.group(6))
 
-    # Convert the longitude value to decimal degrees.
+    # Convert the longitude value to decimal degrees:
     longitude = parse_gpcgg_nmea_coordinate(longitude_value, longitude_direction)
 
-    # Extract the GPS quality indicator.
+    # Extract the GPS quality indicator:
     quality_indicator = int(match.group(7))
 
     # Ensure that it is one of the prescribed values:
     if quality_indicator not in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}:
         raise ValueError("Quality indicator must be between 0 and 9")
 
-    # Extract the number of satellites in use.
+    # Extract the number of satellites in use:
     number_of_satellites = int(match.group(8))
 
-    # Extract the horizontal dilution of precision (HDOP).
+    # Extract the horizontal dilution of precision (HDOP):
     hdop = float(match.group(9))
 
-    # Extract the altitude value in meters.
+    # Extract the altitude value in meters:
     altitude = float(match.group(10))
 
-    # Extract the geoid separation in meters.
+    # Extract the geoid separation in meters:
     geoid_separation = float(match.group(11))
 
     # Extract the differential GPS age if provided; otherwise, set to None:
@@ -175,10 +175,10 @@ def parse_gpcgg_nmea_sentence(value: str) -> GPCGGNMEASentence:
 
     when = datetime.strptime(utc_time, "%H%M%S.%f")
 
-    # Get the current UTC date.
+    # Get the current UTC date:
     now = datetime.now(timezone.utc)
 
-    # Combine the current date with the parsed time to create a complete UTC datetime.
+    # Combine the current date with the parsed time to create a complete UTC datetime:
     utc = datetime(
         now.year,
         now.month,
