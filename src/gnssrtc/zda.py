@@ -5,22 +5,27 @@
 
 # **************************************************************************************
 
-from .nmea import GPCGGNMEASentence
-from .zda import GPZDANMEASentence
+from datetime import datetime
+from typing import TypedDict
 
 # **************************************************************************************
 
-__version__ = "0.0.0"
 
-# **************************************************************************************
+class GPZDANMEASentence(TypedDict):
+    # Message ID $GPZDA or $GNZDA:
+    id: str
 
-__license__ = "MIT"
+    # UTC datetime extracted from the ZDA message:
+    utc: datetime
 
-# **************************************************************************************
+    # Local time zone offset in hours:
+    local_zone_offset_hours: int
 
-__all__: list[str] = [
-    "GPCGGNMEASentence",
-    "GPZDANMEASentence",
-]
+    # Local time zone offset in minutes:
+    local_zone_offset_minutes: int
+
+    # The checksum of the message (starts with "*"):
+    checksum: str
+
 
 # **************************************************************************************
