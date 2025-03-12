@@ -20,6 +20,7 @@ messages = [
     "$GPGGA,172814.0,3723.46587704,N,12202.26957864,W,2,6,1.2,18.893,M,-25.669,M,2.0,0031*4F",
     "$GPGGA,202530.00,5109.0262,N,11401.8407,W,5,40,0.5,1097.36,M,-17.00,M,18,TSTR*61",
     "$GPGGA,134658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,-16.27,M,08,AAAA*60",
+    "$GNGGA,150652.00,5020.28181,N,00446.46277,W,1,06,1.19,70.5,M,51.2,M,,*6D",
 ]
 
 # **************************************************************************************
@@ -125,6 +126,25 @@ class TestGPCGGNMEASentence(unittest.TestCase):
             dgps_age=8.0,
             reference_station_id="AAAA",
             checksum="*60",
+        )
+        self.assertEqual(nmea, expected)
+
+    def test_parse_gpcgg_nmea_sentence_message_3(self) -> None:
+        now = datetime.now(timezone.utc)
+        nmea = parse_gpcgg_nmea_sentence(messages[3])
+        expected = GPCGGNMEASentence(
+            id="$GNGGA",
+            utc=datetime(now.year, now.month, now.day, 15, 6, 52, tzinfo=timezone.utc),
+            latitude=50.33803016666668,
+            longitude=-4.774379499999999,
+            altitude=70.5,
+            quality_indicator=1,
+            number_of_satellites=6,
+            hdop=1.19,
+            geoid_separation=51.2,
+            dgps_age=None,
+            reference_station_id=None,
+            checksum="*6D",
         )
         self.assertEqual(nmea, expected)
 
