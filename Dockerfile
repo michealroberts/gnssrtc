@@ -37,11 +37,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     openssh-client \
     python3-setuptools \
+    swig \
     unzip \
     usbutils \
     wget \
     zsh \
     && rm -rf /var/lib/apt/lists/*
+
+# Install lgpio from source (compatible with Raspberry Pi 5)
+RUN wget https://abyz.me.uk/lg/lg.zip \
+    && unzip lg.zip \
+    && cd lg \
+    && make \
+    && make install \
+    && ldconfig
 
 # Install Oh My Zsh (if needed)
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
