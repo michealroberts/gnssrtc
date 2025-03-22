@@ -175,11 +175,11 @@ class GPSUARTDeviceInterface(object):
         """
         Get a raw line of data from the GPS device
         """
-        line = self._uart.readline()
+        line = self._uart.readline().decode("ascii", errors="ignore").strip()
 
         print(line)
 
-        return self._uart.readline().decode("ascii", errors="ignore").strip()
+        return line
 
     def get_nmea_data(self) -> Optional[GPCGGNMEASentence]:
         """
