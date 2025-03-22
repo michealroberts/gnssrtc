@@ -27,6 +27,70 @@ class BaseDeviceState(Enum):
 
 # **************************************************************************************
 
+# Enables GPS, BeiDou, Galileo, and QZSS signals:
+ENABLE_GPS_BD_Galileo_QZSS_CMD: bytes = (
+    b"\x06\x3e\x3c\x00\x00\x20\x20\x07\x00\x08\x10\x00\x01\x00\x01"
+    b"\x01\x01\x01\x03\x00\x00\x00\x01\x01\x02\x04\x08\x00\x00\x00"
+    b"\x01\x01\x03\x08\x10\x00\x01\x00\x01\x01\x04\x00\x08\x00\x00"
+    b"\x00\x01\x03\x05\x00\x03\x00\x01\x00\x01\x05\x06\x08\x0e\x00"
+    b"\x00\x00\x01\x01"
+)
+
+# Enables NMEA version 4.10 output for BeiDou sentences:
+ENABLE_NMEA_BD_SENTENCES_CMD: bytes = (
+    b"\xb5\x62\x06\x17\x14\x00\x00\x41\x00\x02\x00\x00\x00\x00\x00"
+    b"\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00"
+)
+
+# UBX protocol header that must be prefixed to every command:
+ubx_header: bytes = b"\xb5\x62"
+
+# **************************************************************************************
+
+
+def compute_checksum(command: bytes) -> Tuple[int, int]:
+    """
+    Compute the two 8-bit checksum values for a UBX protocol command.
+
+    The checksum is calculated over the message class, message ID, length, and payload.
+
+    Args:
+        command (bytes): The raw command bytes (excluding the UBX header).
+
+    Returns:
+        Tuple[int, int]: A tuple containing (checksum_a, checksum_b).
+    """
+    cxa = 0
+    cxb = 0
+
+    for byte in command:
+        cxa = (cxa + byte) & 0xFF
+        cxb = (cxb + cxa) & 0xFF
+
+    return cxa, cxb
+
+
+# **************************************************************************************
+
+
+def build_ubx_command(raw_command: bytes) -> bytes:
+    """
+    Build a full UBX command by calculating its checksum and appending it
+    to the raw command, then prefixing the UBX header.
+
+    Args:
+        raw_command (bytes): The raw command content without header or checksum.
+
+    Returns:
+        bytes: The complete UBX command.
+    """
+    cxa, cxb = compute_checksum(raw_command)
+    # Prepend the UBX header and return the full command bytes:
+    return ubx_header + raw_command + bytes([cxa, cxb])
+
+
+# **************************************************************************************
+
 
 class GPSUARTDeviceInterface(object):
     # The default UART port for the GPS module:
@@ -79,12 +143,24 @@ class GPSUARTDeviceInterface(object):
                 f"Failed to open serial port {self._port} at {self._baudrate} baud: {e}"
             )
 
-        # If the UART Serial interface object is already open, return:
-        if self._uart.is_open:
-            return
+        # Flush the input buffer to remove any stale data:
+        self._uart.reset_input_buffer()
 
-        # Open the UART Serial interface object for the GPS module:
-        self._uart.open()
+        # Open the UART Serial interface object for the GPS module if it is not already open:
+        if not self._uart.is_open:
+            self._uart.open()
+
+        # Build the UBX commands to enable GPS, BeiDou, Galileo, and QZSS signals:
+        ubx_command1: bytes = build_ubx_command(ENABLE_GPS_BD_Galileo_QZSS_CMD)
+
+        # Build the UBX command to enable NMEA version 4.10 output for BeiDou sentences:
+        ubx_command2: bytes = build_ubx_command(ENABLE_NMEA_BD_SENTENCES_CMD)
+
+        # Send the UBX command to enable GPS, BeiDou, Galileo, and QZSS signals:
+        self._uart.write(ubx_command1)
+
+        # Send the UBX command to enable NMEA version 4.10 output for BeiDou sentences:
+        self._uart.write(ubx_command2)
 
     def reset(self) -> None:
         """
