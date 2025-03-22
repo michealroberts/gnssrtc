@@ -11,7 +11,7 @@ from gnssrtc.gps import GPSUARTDeviceInterface
 
 # **************************************************************************************
 
-gps = GPSUARTDeviceInterface(port="/dev/serial0", baudrate=115200)
+gps = GPSUARTDeviceInterface(port="/dev/serial0", baudrate=9600)
 
 # **************************************************************************************
 
@@ -20,6 +20,8 @@ if __name__ == "__main__":
 
     try:
         while gps.is_ready():
+            print("GPS module over serial 0 UART is ready")
+
             data = gps.get_nmea_data()
 
             if data:
