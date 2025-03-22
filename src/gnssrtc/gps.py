@@ -183,6 +183,8 @@ class GPSUARTDeviceInterface(object):
         """
         line = self.get_raw_line()
 
+        print(line)
+
         # If the line is not a GPGGA or GNGGA NMEA sentence, return None:
         if not line.startswith("$GPGGA") and not line.startswith("$GNGGA"):
             return None
