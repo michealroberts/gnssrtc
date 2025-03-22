@@ -175,7 +175,9 @@ class GPSUARTDeviceInterface(object):
         """
         Get a raw line of data from the GPS device
         """
-        line = self._uart.readline().decode("ascii", errors="ignore").strip()
+        raw_line = self._uart.read_until(expected=b"\n")
+
+        line = raw_line.decode("ascii", errors="ignore").strip()
 
         print(line)
 
