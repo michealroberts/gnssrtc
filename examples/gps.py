@@ -44,6 +44,14 @@ if __name__ == "__main__":
 
     print(f"Firmware version: {version}")
 
+    while True:
+        data = ser.read_all()
+        if data:
+            print("Received:", data)
+        else:
+            print("No data received...")
+        time.sleep(1)
+
     try:
         while gps.is_ready():
             data = gps.get_nmea_data()
