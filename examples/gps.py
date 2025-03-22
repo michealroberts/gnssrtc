@@ -13,7 +13,7 @@ from gnssrtc.gps import GPSUARTDeviceInterface
 
 # **************************************************************************************
 
-ser = Serial("/dev/ttyAMA10", 115200, timeout=1)
+ser = Serial("/dev/ttyAMA0", 115200, timeout=1)
 
 # **************************************************************************************
 
@@ -29,7 +29,7 @@ ser.write(cmd2)
 
 # **************************************************************************************
 
-gps = GPSUARTDeviceInterface(port="/dev/ttyAMA10", baudrate=115200, timeout=1)
+gps = GPSUARTDeviceInterface(port="/dev/ttyAMA0", baudrate=115200, timeout=1)
 
 # **************************************************************************************
 
