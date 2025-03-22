@@ -177,9 +177,11 @@ class GPSUARTDeviceInterface(object):
         """
         raw_line = self._uart.read_until(expected=b"\n")
 
+        print("Raw bytes:", repr(raw_line))
+
         line = raw_line.decode("ascii", errors="ignore").strip()
 
-        print(line)
+        print("Decoded line:", line)
 
         return line
 
