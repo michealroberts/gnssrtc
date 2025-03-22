@@ -36,6 +36,10 @@ gps = GPSUARTDeviceInterface(port="/dev/ttyAMA10", baudrate=115200, timeout=1)
 if __name__ == "__main__":
     gps.connect()
 
+    version = gps.get_firmware_version()
+
+    print(f"Firmware version: {version}")
+
     try:
         while gps.is_ready():
             data = gps.get_nmea_data()

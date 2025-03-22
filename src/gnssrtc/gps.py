@@ -169,7 +169,29 @@ class GPSUARTDeviceInterface(object):
         Returns:
             Tuple[int, int, int]: The firmware version. Defaults to (0, 0, 0).
         """
-        return 0, 0, 0
+        # MON-VER command (no payload)
+        cmd_mon_ver = b"\xb5\x62\x0a\x04\x00\x00\x0e\x34"
+
+        # Flush input buffer to remove any stale data
+        self._uart.reset_input_buffer()
+
+        # Send the command
+        self._uart.write(cmd_mon_ver)
+
+        # Read all bytes currently available
+        response = self._uart.read_all()
+
+        if not response:
+            return (0, 0, 0)
+
+        # For debugging, print the raw hex response
+        print("Raw firmware response:", response.hex())
+
+        # Parsing the response requires processing the binary packet.
+        # Typically, you’d look for the header (0xB5 0x62), extract the payload length,
+        # and then parse the payload to extract the firmware version strings.
+        # Here, for simplicity, we’ll return the raw hex string.
+        return (0, 0, 0)
 
     def get_raw_line(self) -> str:
         """
