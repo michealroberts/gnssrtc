@@ -11,7 +11,7 @@ from gnssrtc.gps import GPSUARTDeviceInterface
 
 # **************************************************************************************
 
-gps = GPSUARTDeviceInterface(port="/dev/ttyAMA0", baudrate=115200, timeout=1)
+gps = GPSUARTDeviceInterface(port="/dev/ttyAMA0", baudrate=9600, timeout=1)
 
 # **************************************************************************************
 
