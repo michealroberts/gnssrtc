@@ -135,19 +135,23 @@ def parse_gpcgg_nmea_sentence(value: str) -> GPCGGNMEASentence:
     # UTC datetime of position fix; using a default date of 1900-01-01:
     utc_time = match.group(2)
 
-    latitude_value = match.group(3)
+    latitude_value = match.group(3) if match.group(3) is not None else "0"
 
     # Extract the latitude direction (should be "N" or "S"):
-    latitude_direction: Literal["N", "S"] = cast(Literal["N", "S"], match.group(4))
+    latitude_direction: Literal["N", "S"] = (
+        cast(Literal["N", "S"], match.group(4)) if match.group(4) is not None else "N"
+    )
 
     # Convert the latitude value to decimal degrees:
     latitude = parse_gpcgg_nmea_coordinate(latitude_value, latitude_direction)
 
     # Extract the longitude value:
-    longitude_value = match.group(5)
+    longitude_value = match.group(5) if match.group(5) is not None else "0"
 
     # Extract the longitude direction (should be "E" or "W"):
-    longitude_direction: Literal["E", "W"] = cast(Literal["E", "W"], match.group(6))
+    longitude_direction: Literal["E", "W"] = (
+        cast(Literal["E", "W"], match.group(6)) if match.group(6) is not None else "E"
+    )
 
     # Convert the longitude value to decimal degrees:
     longitude = parse_gpcgg_nmea_coordinate(longitude_value, longitude_direction)
@@ -166,10 +170,10 @@ def parse_gpcgg_nmea_sentence(value: str) -> GPCGGNMEASentence:
     hdop = float(match.group(9))
 
     # Extract the altitude value in meters:
-    altitude = float(match.group(10))
+    altitude = float(match.group(10)) if match.group(10) else inf
 
     # Extract the geoid separation in meters:
-    geoid_separation = float(match.group(11))
+    geoid_separation = float(match.group(11)) if match.group(11) else inf
 
     # Extract the differential GPS age if provided; otherwise, set to None:
     dgps_age = float(match.group(12)) if match.group(12) else None
