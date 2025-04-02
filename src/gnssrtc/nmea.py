@@ -68,21 +68,21 @@ GPCGG_NMEA_MESSAGE_REGEX = compile(
     # Group 2: UTC time (hhmmss.ss) with 1 or 2 decimals
     r"(\d{6}\.\d{1,2}),"
     # Group 3: Latitude value, Group 4: Latitude direction
-    r"(\d{4,}\.\d+),([NS]),"
+    r"((?:\d{4,}\.\d+)?),([NS]?),"
     # Group 5: Longitude value, Group 6: Longitude direction
-    r"(\d{5,}\.\d+),([EW]),"
+    r"((?:\d{5,}\.\d+)?),([EW]?),"
     # Group 7: GPS quality indicator (0-9)
-    r"(\d),"
+    r"(\d?),"
     # Group 8: Number of satellites in use
-    r"(\d{1,2}),"
+    r"(\d{1,2})?,"
     # Group 9: Horizontal dilution of precision (HDOP)
-    r"([\d\.]+),"
+    r"([\d\.]+)?,"
     # Group 10: Altitude in meters (with optional sign)
-    r"(-?[\d\.]+),M,"
+    r"(-?[\d\.]+)?,(?:M)?,"
     # Group 11: Geoid separation in meters (with optional sign)
-    r"(-?[\d\.]+),M,"
+    r"(-?[\d\.]+)?,(?:M)?,"
     # Group 12: Differential GPS age (optional)
-    r"([\d\.]*)?,"
+    r"([\d\.]+)?,"
     # Group 13: Reference station ID (optional)
     r"([A-Za-z0-9]+)?"
     # Group 14: Checksum (two hex digits)
