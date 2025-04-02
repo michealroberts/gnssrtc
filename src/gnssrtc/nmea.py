@@ -6,6 +6,7 @@
 # **************************************************************************************
 
 from datetime import datetime, timezone
+from math import inf
 from re import compile
 from typing import Literal, Optional, TypedDict, cast
 
@@ -96,6 +97,9 @@ GPCGG_NMEA_MESSAGE_REGEX = compile(
 def parse_gpcgg_nmea_coordinate(
     value: str, direction: Literal["N", "S", "E", "W"]
 ) -> float:
+    if not value:
+        return inf
+
     degrees = int(float(value) // 100)
     minutes = float(value) - (degrees * 100)
 
