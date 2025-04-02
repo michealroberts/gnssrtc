@@ -67,7 +67,7 @@ GPCGG_NMEA_MESSAGE_REGEX = compile(
     # Group 1: Message ID ($GPGGA or $GNGGA for multi-GNSS)
     r"^\$(GPGGA|GNGGA),"
     # Group 2: UTC time (hhmmss.ss) with 1 or 2 decimals
-    r"(\d{6}\.\d{1,2}),"
+    r"((?:\d{6}\.\d{1,2})?),"
     # Group 3: Latitude value, Group 4: Latitude direction
     r"((?:\d{4,}\.\d+)?),([NS]?),"
     # Group 5: Longitude value, Group 6: Longitude direction
@@ -132,8 +132,14 @@ def parse_gpcgg_nmea_sentence(value: str) -> GPCGGNMEASentence:
     # Extract the checksum from the matched groups, and prepend the '*' character:
     checksum = "*" + match.group(14)
 
+    now = datetime.now(timezone.utc)
+
     # UTC datetime of position fix; using a default date of 1900-01-01:
-    utc_time = match.group(2)
+    utc_time = (
+        match.group(2)
+        if match.group(2) != ""
+        else now.strftime("%H%M%S.") + f"{now.microsecond // 10000:02d}"
+    )
 
     latitude_value = match.group(3) if match.group(3) is not None else "0"
 

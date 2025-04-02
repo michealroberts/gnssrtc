@@ -23,6 +23,7 @@ messages = [
     "$GPGGA,134658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,-16.27,M,08,AAAA*60",
     "$GNGGA,150652.00,5020.28181,N,00446.46277,W,1,06,1.19,70.5,M,51.2,M,,*6D",
     "$GNGGA,175251.48,,,,,0,00,99.99,,,,,,*71",
+    "$GNGGA,,,,,,0,00,99.99,,,,,,*56",
 ]
 
 # **************************************************************************************
@@ -170,6 +171,28 @@ class TestGPCGGNMEASentence(unittest.TestCase):
             checksum="*71",
         )
         self.assertEqual(nmea, expected)
+
+    def test_parse_gpcgg_nmea_sentence_message_5(self) -> None:
+        now = datetime.now(timezone.utc)
+        nmea = parse_gpcgg_nmea_sentence(messages[5])
+        expected = GPCGGNMEASentence(
+            id="$GNGGA",
+            utc=nmea["utc"],
+            latitude=inf,
+            longitude=inf,
+            altitude=inf,
+            quality_indicator=0,
+            number_of_satellites=0,
+            hdop=99.99,
+            geoid_separation=inf,
+            dgps_age=None,
+            reference_station_id=None,
+            checksum="*56",
+        )
+        self.assertEqual(nmea, expected)
+
+        # Check that the UTC time is set to the current time +/- 1 second:
+        self.assertTrue(abs((nmea["utc"] - now).total_seconds()) < 1)
 
 
 # **************************************************************************************
