@@ -5,6 +5,9 @@
 
 # **************************************************************************************
 
+from .epoch import (
+    EPOCH_NTP_1900,
+)
 from .gps import (
     BaseDeviceState,
     GPSUARTDeviceInterface,
@@ -23,6 +26,7 @@ __license__ = "MIT"
 # **************************************************************************************
 
 __all__: list[str] = [
+    "EPOCH_NTP_1900",
     "BaseDeviceState",
     "GPCGGNMEASentence",
     "GPSUARTDeviceInterface",
