@@ -8,7 +8,7 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from gnssrtc import EPOCH_NTP_1900
+from gnssrtc import EPOCH_NTP_1900, EPOCH_UNIX_1970
 
 # **************************************************************************************
 
@@ -33,5 +33,31 @@ class TestEpochNTP1900(unittest.TestCase):
         )
         self.assertEqual(EPOCH_NTP_1900.isoformat(), "1900-01-01T00:00:00+00:00")
 
+
+# **************************************************************************************
+
+
+class TestEpochUnix1970(unittest.TestCase):
+    def test_epoch_unix_1970(self):
+        self.assertEqual(EPOCH_UNIX_1970.year, 1970)
+        self.assertEqual(EPOCH_UNIX_1970.month, 1)
+        self.assertEqual(EPOCH_UNIX_1970.day, 1)
+        self.assertEqual(EPOCH_UNIX_1970.hour, 0)
+        self.assertEqual(EPOCH_UNIX_1970.minute, 0)
+        self.assertEqual(EPOCH_UNIX_1970.second, 0)
+        self.assertEqual(EPOCH_UNIX_1970.tzinfo.utcoffset(None), timedelta(0))
+        self.assertEqual(EPOCH_UNIX_1970.tzinfo.tzname(None), "UTC")
+        self.assertEqual(EPOCH_UNIX_1970.timestamp(), 0)
+        self.assertEqual(
+            EPOCH_UNIX_1970.strftime("%Y-%m-%d %H:%M:%S"), "1970-01-01 00:00:00"
+        )
+        self.assertEqual(EPOCH_UNIX_1970.isoformat(), "1970-01-01T00:00:00+00:00")
+
+
+# **************************************************************************************
+
+
+if __name__ == "__main__":
+    unittest.main()
 
 # **************************************************************************************
