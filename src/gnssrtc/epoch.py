@@ -16,3 +16,8 @@ EPOCH_NTP_1900 = datetime(1900, 1, 1, tzinfo=timezone.utc)
 EPOCH_UNIX_1970 = datetime(1970, 1, 1, tzinfo=timezone.utc)
 
 # **************************************************************************************
+
+# Get the number of seconds between the NTP and Unix epochs:
+NTP_UNIX_DELTA: int = int((EPOCH_UNIX_1970 - EPOCH_NTP_1900).total_seconds())
+
+# **************************************************************************************

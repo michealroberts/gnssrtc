@@ -8,7 +8,7 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from gnssrtc import EPOCH_NTP_1900, EPOCH_UNIX_1970
+from gnssrtc import EPOCH_NTP_1900, EPOCH_UNIX_1970, NTP_UNIX_DELTA
 
 # **************************************************************************************
 
@@ -52,6 +52,17 @@ class TestEpochUnix1970(unittest.TestCase):
             EPOCH_UNIX_1970.strftime("%Y-%m-%d %H:%M:%S"), "1970-01-01 00:00:00"
         )
         self.assertEqual(EPOCH_UNIX_1970.isoformat(), "1970-01-01T00:00:00+00:00")
+
+
+# **************************************************************************************
+
+
+class TestEpochNTPUnixDelta(unittest.TestCase):
+    def test_epoch_ntp_unix_delta(self):
+        self.assertEqual(NTP_UNIX_DELTA, 2208988800)
+        self.assertEqual(
+            (EPOCH_UNIX_1970 - EPOCH_NTP_1900).total_seconds(), NTP_UNIX_DELTA
+        )
 
 
 # **************************************************************************************

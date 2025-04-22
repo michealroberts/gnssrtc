@@ -8,6 +8,7 @@
 from .epoch import (
     EPOCH_NTP_1900,
     EPOCH_UNIX_1970,
+    NTP_UNIX_DELTA,
 )
 from .gps import (
     BaseDeviceState,
@@ -29,6 +30,7 @@ __license__ = "MIT"
 __all__: list[str] = [
     "EPOCH_NTP_1900",
     "EPOCH_UNIX_1970",
+    "NTP_UNIX_DELTA",
     "BaseDeviceState",
     "GPCGGNMEASentence",
     "GPSUARTDeviceInterface",
