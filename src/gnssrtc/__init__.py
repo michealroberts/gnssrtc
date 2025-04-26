@@ -15,6 +15,7 @@ from .gps import (
     GPSUARTDeviceInterface,
 )
 from .nmea import GPCGGNMEASentence
+from .server import GNSSStratum1NTPServer
 from .zda import GPZDANMEASentence
 
 # **************************************************************************************
@@ -32,6 +33,7 @@ __all__: list[str] = [
     "EPOCH_UNIX_1970",
     "NTP_UNIX_DELTA",
     "BaseDeviceState",
+    "GNSSStratum1NTPServer",
     "GPCGGNMEASentence",
     "GPSUARTDeviceInterface",
     "GPZDANMEASentence",
