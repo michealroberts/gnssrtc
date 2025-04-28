@@ -8,7 +8,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 from time import time_ns
-from typing import Optional, Tuple
+from typing import Literal, Optional, Tuple, TypedDict
 
 from serial import Serial
 
@@ -23,6 +23,64 @@ class BaseDeviceState(Enum):
     CONNECTED = "connected"
     DISCONNECTING = "disconnecting"
     ERROR = "error"
+
+
+# **************************************************************************************
+
+
+class GPSData(TypedDict):
+    # UTC time of fix in hhmmss.ss format:
+    utc: datetime
+
+    # Latitude in decimal degrees:
+    latitude: float
+
+    # Hemisphere for latitude, 'N' or 'S':
+    latitude_hemisphere: Literal["N", "S"]
+
+    # Longitude in decimal degrees:
+    longitude: float
+
+    # Hemisphere for longitude, 'E' or 'W':
+    longitude_hemisphere: Literal["E", "W"]
+
+    # Fix quality indicator as string literal:
+    quality_indicator: Literal[
+        "Fix not valid",
+        "GPS fix",
+        "Differential GPS fix (DGNSS), SBAS, OmniSTAR VBS, Beacon, RTX in GVBS mode",
+        "Not applicable",
+        "RTK Fixed, xFill",
+        "RTK Float, OmniSTAR XP/HP, Location RTK, RTX",
+        "INS Dead reckoning",
+        "Manual input mode (fixed position)",
+        "Simulator mode",
+        "WAAS (SBAS)",
+    ]
+
+    # Number of satellites in use:
+    number_of_satellites: int
+
+    # Horizontal Dilution of Precision:
+    horizontal_dilution_of_precision: float
+
+    # Antenna altitude above mean sea level in meters:
+    antenna_altitude: float
+
+    # Units for antenna altitude, always 'M':
+    antenna_altitude_units: Literal["M"]
+
+    # Geoidal separation in meters:
+    geoidal_separation: float
+
+    # Units for geoidal separation, always 'M':
+    geoidal_separation_units: Literal["M"]
+
+    # Age of Differential GPS data in seconds, None if unavailable:
+    age_of_differential_gps_data: Optional[float]
+
+    # Station ID of Differential GPS data source, None if unavailable:
+    dgps_station_id: Optional[int]
 
 
 # **************************************************************************************
