@@ -377,5 +377,29 @@ class GPSUARTDeviceInterface(object):
 
         return data.get("utc", datetime.now(timezone.utc))
 
+    def get_number_of_satellites(self, timeout: float = 10.0) -> int:
+        """
+        Get the number of satellites from the GPS device
+
+        Args:
+            timeout (float): The maximum time to wait for a valid NMEA sentence in seconds. Default is 10 seconds.
+
+        Returns:
+            int: The number of satellites.
+        """
+        start = time_ns()
+
+        timeout_ns = int(timeout * 1e9)
+
+        while True:
+            data = self.get_nmea_data()
+            if data:
+                break
+
+            if (time_ns() - start) >= timeout_ns:
+                raise TimeoutError("Timed out waiting for valid NMEA sentence")
+
+        return data.get("number_of_satellites", 0)
+
 
 # **************************************************************************************
