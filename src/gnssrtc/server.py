@@ -65,6 +65,10 @@ class GNSSStratum1NTPServer(NTPServer):
     # Store the last synchronisation time from the GPS device:
     _last_sync_time: datetime = datetime.now()
 
+    # Store the last synchronisation for the number of connected satellites from
+    # the GPS device:
+    _number_of_connected_satellites: int = 0
+
     def __init__(
         self,
         device: GPSUARTDeviceInterface,
@@ -108,6 +112,11 @@ class GNSSStratum1NTPServer(NTPServer):
                 padding=(1, 2),
             ),
             Panel(
+                f"Number of connected satellites: {self._number_of_connected_satellites}",
+                title="Connected Satellites",
+                padding=(1, 2),
+            ),
+            Panel(
                 "\n".join(self._log_handler.records),
                 title="Logs",
                 padding=(1, 2),
@@ -145,14 +154,32 @@ class GNSSStratum1NTPServer(NTPServer):
         """
         while True:
             try:
-                # Poll the GPS device for the current time:
-                now = self.device.get_time(timeout=self._poll_interval)
+                # Poll the GPS device for the most recent NMEA data:
+                data = self.device.get_nmea_data()
+
+                if not data:
+                    # We received a non-$GPGGA NMEA sentence → continue polling:
+                    continue
+
+                # Parse the NMEA data to extract the UTC time:
+                now = data.get("utc", None)
+
+                if now is None:
+                    # No UTC time received from the GPS device → retry polling:
+                    logging.warning("No UTC time received from GPS device; retrying...")
+                    continue
 
                 # Set the system time to the current time from the GPS device:
                 set_system_time(when=now)
 
                 # Set the last synchronised time to the current time from the GPS device:
                 self._last_sync_time = now
+
+                # Set the number of connected satellites to the current value
+                # from the GPS device:
+                self._number_of_connected_satellites = data.get(
+                    "number_of_satellites", 0
+                )
 
             except TimeoutError:
                 # No fix this interval → retry polling:
