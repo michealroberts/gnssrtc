@@ -97,13 +97,21 @@ class GNSSStratum1NTPServer(NTPServer):
         )
         # Create a panel with the header and the last synchronised time:
         return Group(
-            Panel(header, title="Server Info", padding=(1, 2)),
+            Panel(
+                header,
+                title="Server Info",
+                padding=(1, 2),
+            ),
             Panel(
                 self._last_sync_time.isoformat(sep=" ", timespec="milliseconds"),
                 title="Synchronised System Time",
                 padding=(1, 2),
             ),
-            Panel("\n".join(self._log_handler.records), title="Logs", padding=(1, 2)),
+            Panel(
+                "\n".join(self._log_handler.records),
+                title="Logs",
+                padding=(1, 2),
+            ),
         )
 
     def __enter__(self) -> "GNSSStratum1NTPServer":
